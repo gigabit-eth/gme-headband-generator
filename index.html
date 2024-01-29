@@ -24,11 +24,13 @@
         display: flex;
         flex-direction: column;
         align-items: center; /* Center the elements horizontally */
+        justify-content: center; /* Center the elements vertically */
       }
 
       #canvas-container {
         position: relative;
         background-color: transparent;
+        margin: auto;
       }
 
       #uploadButton,
@@ -55,6 +57,20 @@
       #saveButton {
         display: none; /* Initially hide the save button */
       }
+
+      @media screen and (max-width: 768px) {
+        /* Adjust 768px to the desired mobile screen width */
+        #container-wrapper {
+          width: 100%;
+        }
+        #canvas-container {
+          width: 80%;
+          max-width: 300px;
+          max-height: 300px;
+          margin: auto;
+          overflow: hidden; /* Hide any potential overflow */
+        }
+      }
     </style>
   </head>
 
@@ -68,8 +84,16 @@
     </div>
 
     <script>
-      const fixedCanvasWidth = 450;
-      const maxCanvasHeight = 450;
+      let fixedCanvasWidth, maxCanvasHeight;
+
+      if (window.innerWidth <= 768) {
+        // 768px is a common breakpoint for mobile devices
+        fixedCanvasWidth = 250;
+        maxCanvasHeight = 250;
+      } else {
+        fixedCanvasWidth = 450;
+        maxCanvasHeight = 450;
+      }
 
       const stage = new Konva.Stage({
         container: "canvas-container",
@@ -99,8 +123,17 @@
           mustache = img;
           const aspectRatio = img.width() / img.height();
 
-          let newMustacheWidth = 250;
-          let newMustacheHeight = 250 / aspectRatio;
+          let newMustacheWidth, newMustacheHeight;
+
+          if (window.innerWidth <= 768) {
+            // Mobile devices
+            newMustacheWidth = 100;
+            newMustacheHeight = 100 / aspectRatio;
+          } else {
+            // Desktop
+            newMustacheWidth = 250;
+            newMustacheHeight = 250 / aspectRatio;
+          }
 
           if (newMustacheHeight > maxCanvasHeight) {
             newMustacheHeight = maxCanvasHeight;
@@ -136,9 +169,16 @@
             rotateEnabled: false,
           });
 
-          mustache.on("click", () => {
-            tr.visible(!tr.visible());
-            layer.batchDraw();
+          mustache.on("click tap", () => {
+            if (window.innerWidth <= 768) {
+              // Mobile devices
+              tr.visible(!tr.visible());
+              layer.batchDraw();
+            } else {
+              // Desktop
+              tr.visible(!tr.visible());
+              layer.batchDraw();
+            }
           });
 
           layer.add(canvasBorder);
@@ -192,7 +232,7 @@
         const dataURL = stage.toDataURL({ mimeType: "image/png", quality: 1 });
         const a = document.createElement("a");
         a.href = dataURL;
-        a.download = "canvas_with_mustache.png";
+        a.download = "Hold_GME_on_SOL_to_5_Billion.png";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -224,6 +264,8 @@
       $("#saveButton").click(function () {
         saveCanvasAsImage();
       });
+
+      $("#saveButton").hide();
 
       addMustacheToCanvas();
     </script>
