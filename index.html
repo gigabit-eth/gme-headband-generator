@@ -103,15 +103,33 @@
             }
 
             @media screen and (max-width: 768px) {
-              /* Adjust 768px to the desired mobile screen width */
               #container-wrapper {
-                width: 100%;
+                width: 100%; /* Full width of its parent */
               }
               #canvas-container {
-                max-width: 300px;
-                max-height: 300px;
-                margin: auto;
-                overflow: hidden; /* Hide any potential overflow */
+                width: 100%; /* Take full width to utilize the space */
+                max-width: 300px; /* But don't grow beyond 300px */
+                max-height: 300px; /* Same for height */
+                margin: auto; /* Center horizontally */
+                overflow: hidden; /* Hide overflow */
+                display: flex; /* Use flexbox to center content */
+                justify-content: center; /* Center horizontally */
+                align-items: center; /* Center vertically */
+              }
+              .konvajs-content {
+                width: 100%; /* Let it fill the container */
+                max-width: 250px; /* But don't exceed 250px */
+                height: auto; /* Adjust height automatically */
+                position: relative;
+                user-select: none;
+              }
+              .konvajs-content canvas {
+                width: 100% !important; /* Override inline styles for responsiveness */
+                height: auto !important; /* Maintain aspect ratio */
+                max-width: 250px; /* Respect the max-width of .konvajs-content */
+                position: absolute;
+                top: 0;
+                left: 0;
               }
             }
           </style>
